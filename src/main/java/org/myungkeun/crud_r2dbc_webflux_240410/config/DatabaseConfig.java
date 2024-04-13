@@ -15,7 +15,12 @@ public class DatabaseConfig {
     ConnectionFactoryInitializer initializer(ConnectionFactory connectionFactory) {
         ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
         initializer.setConnectionFactory(connectionFactory);
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+//        populator.addScript(new ClassPathResource("schema.sql"));
+//        populator.addScript(new ClassPathResource("blog_schema.sql"));
         initializer.setDatabasePopulator(new ResourceDatabasePopulator(new ClassPathResource("schema.sql")));
+//        initializer.setDatabasePopulator(new ResourceDatabasePopulator(new ClassPathResource("blog_schema.sql")));
+        initializer.setDatabasePopulator(populator);
         return initializer;
     }
 }
