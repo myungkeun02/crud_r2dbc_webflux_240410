@@ -1,4 +1,4 @@
-package org.myungkeun.crud_r2dbc_webflux_240410.config;
+package org.myungkeun.crud_r2dbc_webflux_240410.config.security;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,13 @@ import reactor.core.publisher.Mono;
 @EnableReactiveMethodSecurity
 @AllArgsConstructor
 public class WebSecurityConfig {
+    private final AuthenticationManager authenticationManager;
+    private final SecurityContextRepository securityContextRepository;
+
     private static final String REGISTER_URL = "/auth/signup";
+    private static final String LOGIN_URL = "/auth/login";
+
+    private static final String USER_URL = "/user";
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -30,10 +36,14 @@ public class WebSecurityConfig {
                         () -> swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN)) //no authenticate 403
                 )
                 .and()
+                .authenticationManager(authenticationManager)
+                .securityContextRepository(securityContextRepository)
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.POST).permitAll()
+                .pathMatchers(HttpMethod.GET).permitAll()
                 .pathMatchers(
-                        REGISTER_URL
+                        REGISTER_URL,
+                        USER_URL
                 )
                 .permitAll()
                 .anyExchange().authenticated()

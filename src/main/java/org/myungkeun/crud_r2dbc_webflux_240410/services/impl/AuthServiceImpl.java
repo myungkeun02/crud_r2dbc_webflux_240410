@@ -1,7 +1,7 @@
 package org.myungkeun.crud_r2dbc_webflux_240410.services.impl;
 
 import lombok.AllArgsConstructor;
-import org.myungkeun.crud_r2dbc_webflux_240410.config.UserPasswordEncoder;
+import org.myungkeun.crud_r2dbc_webflux_240410.config.security.UserPasswordEncoder;
 import org.myungkeun.crud_r2dbc_webflux_240410.config.jwt.JwtTokenUtil;
 import org.myungkeun.crud_r2dbc_webflux_240410.entities.Role;
 import org.myungkeun.crud_r2dbc_webflux_240410.entities.User;
