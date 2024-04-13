@@ -2,6 +2,7 @@ package org.myungkeun.crud_r2dbc_webflux_240410.services.impl;
 
 import lombok.AllArgsConstructor;
 import org.myungkeun.crud_r2dbc_webflux_240410.config.UserPasswordEncoder;
+import org.myungkeun.crud_r2dbc_webflux_240410.config.jwt.JwtTokenUtil;
 import org.myungkeun.crud_r2dbc_webflux_240410.entities.Role;
 import org.myungkeun.crud_r2dbc_webflux_240410.entities.User;
 import org.myungkeun.crud_r2dbc_webflux_240410.payload.LoginRequest;
@@ -18,6 +19,7 @@ import java.util.Objects;
 @AllArgsConstructor
 
 public class AuthServiceImpl implements AuthService {
+    private final JwtTokenUtil jwtTokenUtil;
     private final UserRepository userRepository;
     private final UserPasswordEncoder userPasswordEncoder;
     @Override
@@ -46,6 +48,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Mono<String> login(LoginRequest request) {
-        return null;
+        return userRepository.findByEmail(request.getEmail())
+                .filter(user -> userPasswordEncoder.matches(request.getPassword(), user.getPassword()))
+                .map(jwtTokenUtil::generateAccessToken)
+                .switchIfEmpty(Mono.<String>error(new RuntimeException("Login failed - not found email or wrong password")));
     }
 }
